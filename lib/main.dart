@@ -1,122 +1,494 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProfileApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class ProfileApp extends StatelessWidget {
+  const ProfileApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'Profile UI',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+        useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const ProfileScreen(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _ProfileScreenState extends State<ProfileScreen> {
+  bool isFollowing = false;
+  int followers = 1250;
+  int projects = 24;
+  int experience = 5;
+  int rating = 4;
 
-  void _incrementCounter() {
+  void _toggleFollow() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      isFollowing = !isFollowing;
+      followers += isFollowing ? 1 : -1;
+    });
+  }
+
+  void _updateProjects() {
+    setState(() {
+      projects += 1;
+      rating = (rating % 5) + 1;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: const Text('Profile'),
+        centerTitle: true,
+        elevation: 0,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+      body: Container(
+        color: const Color(0xFFF4F7FF),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  Container(
+                    height: 260,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF3F51B5), Color(0xFF6574CF)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(32),
+                        bottomRight: Radius.circular(32),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 180,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width - 32,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 24,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(28),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color.fromRGBO(0, 0, 0, 0.15),
+                            blurRadius: 18,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 72),
+                          Text(
+                            'Ayesha Siddiqui',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall
+                                ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'UI/UX Designer',
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.location_on, size: 16, color: Colors.indigo),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Karachi, Pakistan',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
+                          // Rating Section
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ...List.generate(5, (i) {
+                                return Icon(
+                                  i < rating ? Icons.star : Icons.star_border,
+                                  color: Colors.amber,
+                                  size: 18,
+                                );
+                              }),
+                              const SizedBox(width: 8),
+                              Text(
+                                '$rating.0 (128 reviews)',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
+                          _sectionDivider(),
+                          const SizedBox(height: 24),
+                          // Contact Information
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Contact Information',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  _detailItem('Email', 'ayesha@email.com'),
+                                  _detailItem('Phone', '+92-3001234567'),
+                                ],
+                              ),
+                              const SizedBox(height: 14),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  _detailItem('ID', 'UI-2048'),
+                                  _detailItem('Location', 'Karachi'),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
+                          _sectionDivider(),
+                          const SizedBox(height: 24),
+                          // Professional Details
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Professional Details',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  _detailItem('Department', 'Design'),
+                                  _detailItem('Batch', '2024'),
+                                ],
+                              ),
+                              const SizedBox(height: 14),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  _detailItem('Level', 'Senior'),
+                                  _detailItem('Availability', 'Available'),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
+                          _sectionDivider(),
+                          const SizedBox(height: 24),
+                          // Statistics
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _statCard('Projects', projects.toString()),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: _statCard('Followers', '$followers'),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: _statCard('Experience', '$experience y'),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
+                          _sectionDivider(),
+                          const SizedBox(height: 24),
+                          // Skills Section
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Skills',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 8,
+                                children: [
+                                  _skillChip('UI Design'),
+                                  _skillChip('Figma'),
+                                  _skillChip('Prototyping'),
+                                  _skillChip('User Research'),
+                                  _skillChip('Adobe XD'),
+                                  _skillChip('Wireframing'),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
+                          _sectionDivider(),
+                          const SizedBox(height: 24),
+                          // About Me Section
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                'About Me',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                'Creative and passionate UI/UX Designer with 5+ years of experience designing beautiful, user-friendly digital products. Specialized in creating intuitive interfaces, conducting user research, and translating complex ideas into elegant design solutions. Committed to continuous learning and staying updated with latest design trends.',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  height: 1.6,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
+                          _sectionDivider(),
+                          const SizedBox(height: 24),
+                          // Action Buttons
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton.icon(
+                                  onPressed: _toggleFollow,
+                                  icon: Icon(isFollowing ? Icons.check : Icons.add),
+                                  label: Text(isFollowing ? 'Following' : 'Follow'),
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(vertical: 14),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: OutlinedButton.icon(
+                                  onPressed: _updateProjects,
+                                  icon: const Icon(Icons.add_circle_outline),
+                                  label: const Text('Add Project'),
+                                  style: OutlinedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(vertical: 14),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 110,
+                    child: Center(
+                      child: Container(
+                        width: 140,
+                        height: 140,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 6,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromRGBO(0, 0, 0, 0.15),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        child: const CircleAvatar(
+                          radius: 68,
+                          backgroundImage: NetworkImage(
+                            'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _actionButton(Icons.message, 'Message'),
+                    _actionButton(Icons.call, 'Call'),
+                    _actionButton(Icons.share, 'Share'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _detailItem(String title, String value) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _statCard(String label, String value) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8F9FF),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.grey[700],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _actionButton(IconData icon, String label) {
+    return Expanded(
+      child: Container(
+        height: 58,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: const Color.fromRGBO(0, 0, 0, 0.04),
+              blurRadius: 14,
+              offset: const Offset(0, 6),
             ),
           ],
         ),
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: Colors.indigo, size: 20),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  label,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  Widget _sectionDivider() {
+    return Container(
+      height: 1,
+      color: Colors.grey[300],
+    );
+  }
+
+  Widget _skillChip(String skill) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE8EEFB),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: const Color(0xFFD0D9F0),
+        ),
+      ),
+      child: Text(
+        skill,
+        style: const TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+          color: Color(0xFF3F51B5),
+        ),
+      ),
     );
   }
 }
+
