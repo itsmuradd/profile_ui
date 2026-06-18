@@ -27,7 +27,7 @@ A modern, interactive, and responsive User Profile Screen built with Flutter. Th
 
 ## 📸 Screenshots
 
->(screemshots/ui ss.png)
+>(screenshots/ui ss.png)
 
 ---
 
