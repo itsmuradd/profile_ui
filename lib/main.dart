@@ -1,494 +1,478 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const ProfileApp());
+  runApp(const MyApp());
 }
 
-class ProfileApp extends StatelessWidget {
-  const ProfileApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Profile',
       debugShowCheckedModeBanner: false,
-      title: 'Profile UI',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFE08C2A)),
         useMaterial3: true,
+        fontFamily: 'Roboto',
       ),
       home: const ProfileScreen(),
     );
   }
 }
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
-
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  bool isFollowing = false;
-  int followers = 1250;
-  int projects = 24;
-  int experience = 5;
-  int rating = 4;
-
-  void _toggleFollow() {
-    setState(() {
-      isFollowing = !isFollowing;
-      followers += isFollowing ? 1 : -1;
-    });
-  }
-
-  void _updateProjects() {
-    setState(() {
-      projects += 1;
-      rating = (rating % 5) + 1;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        centerTitle: true,
-        elevation: 0,
-      ),
-      body: Container(
-        color: const Color(0xFFF4F7FF),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Stack(
-                alignment: Alignment.topCenter,
+      backgroundColor: const Color(0xFFF5F5F7),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // ── Top App Bar ──────────────────────────────────
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.only(
+                  top: 48, left: 20, right: 20, bottom: 14),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text(
+                    'Profile',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF1A2340),
+                    ),
+                  ),
+                  Icon(Icons.dark_mode_outlined,
+                      color: Color(0xFFE08C2A), size: 26),
+                ],
+              ),
+            ),
+
+            // ── Banner + Avatar + Name ───────────────────────
+            Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: [
+                // Banner image
+                Container(
+                  height: 170,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
+                      ),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+
+                // White background behind name block so it flows cleanly
+                Positioned(
+                  top: 120,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    color: Colors.white,
+                    height: 130,
+                  ),
+                ),
+
+                // Avatar centred, half on banner / half on white
+                Positioned(
+                  top: 80,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 4),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.15),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: const CircleAvatar(
+                      radius: 52,
+                      backgroundColor: Color(0xFFE0E0E0),
+                      child: Icon(Icons.person,
+                          size: 56, color: Color(0xFFBDBDBD)),
+                    ),
+                  ),
+                ),
+
+                // Name + title below avatar
+                Positioned(
+                  top: 194,
+                  left: 0,
+                  right: 0,
+                  child: Column(
+                    children: const [
+                      Text(
+                        'Murad Hussain',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF1A2340),
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        'Software Engineering Student',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFFE08C2A),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            // Spacer so content starts below the overlap zone
+            const SizedBox(height: 68),
+
+            // ── Action Buttons ───────────────────────────────
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
                 children: [
-                  Container(
-                    height: 260,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Color(0xFF3F51B5), Color(0xFF6574CF)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(32),
-                        bottomRight: Radius.circular(32),
-                      ),
+                  Expanded(
+                    flex: 3,
+                    child: _ActionButton(
+                      icon: Icons.check,
+                      label: 'Following',
+                      onTap: () {},
                     ),
                   ),
-                  Positioned(
-                    top: 180,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width - 32,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 24,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(28),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color.fromRGBO(0, 0, 0, 0.15),
-                            blurRadius: 18,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 72),
-                          Text(
-                            'Ayesha Siddiqui',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineSmall
-                                ?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'UI/UX Designer',
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.location_on, size: 16, color: Colors.indigo),
-                              const SizedBox(width: 4),
-                              Text(
-                                'Karachi, Pakistan',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 24),
-                          // Rating Section
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ...List.generate(5, (i) {
-                                return Icon(
-                                  i < rating ? Icons.star : Icons.star_border,
-                                  color: Colors.amber,
-                                  size: 18,
-                                );
-                              }),
-                              const SizedBox(width: 8),
-                              Text(
-                                '$rating.0 (128 reviews)',
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 24),
-                          _sectionDivider(),
-                          const SizedBox(height: 24),
-                          // Contact Information
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Contact Information',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  _detailItem('Email', 'ayesha@email.com'),
-                                  _detailItem('Phone', '+92-3001234567'),
-                                ],
-                              ),
-                              const SizedBox(height: 14),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  _detailItem('ID', 'UI-2048'),
-                                  _detailItem('Location', 'Karachi'),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 24),
-                          _sectionDivider(),
-                          const SizedBox(height: 24),
-                          // Professional Details
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Professional Details',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  _detailItem('Department', 'Design'),
-                                  _detailItem('Batch', '2024'),
-                                ],
-                              ),
-                              const SizedBox(height: 14),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  _detailItem('Level', 'Senior'),
-                                  _detailItem('Availability', 'Available'),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 24),
-                          _sectionDivider(),
-                          const SizedBox(height: 24),
-                          // Statistics
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _statCard('Projects', projects.toString()),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: _statCard('Followers', '$followers'),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: _statCard('Experience', '$experience y'),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 24),
-                          _sectionDivider(),
-                          const SizedBox(height: 24),
-                          // Skills Section
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Skills',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: [
-                                  _skillChip('UI Design'),
-                                  _skillChip('Figma'),
-                                  _skillChip('Prototyping'),
-                                  _skillChip('User Research'),
-                                  _skillChip('Adobe XD'),
-                                  _skillChip('Wireframing'),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 24),
-                          _sectionDivider(),
-                          const SizedBox(height: 24),
-                          // About Me Section
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                'About Me',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              Text(
-                                'Creative and passionate UI/UX Designer with 5+ years of experience designing beautiful, user-friendly digital products. Specialized in creating intuitive interfaces, conducting user research, and translating complex ideas into elegant design solutions. Committed to continuous learning and staying updated with latest design trends.',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  height: 1.6,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 24),
-                          _sectionDivider(),
-                          const SizedBox(height: 24),
-                          // Action Buttons
-                          Row(
-                            children: [
-                              Expanded(
-                                child: ElevatedButton.icon(
-                                  onPressed: _toggleFollow,
-                                  icon: Icon(isFollowing ? Icons.check : Icons.add),
-                                  label: Text(isFollowing ? 'Following' : 'Follow'),
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(vertical: 14),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: OutlinedButton.icon(
-                                  onPressed: _updateProjects,
-                                  icon: const Icon(Icons.add_circle_outline),
-                                  label: const Text('Add Project'),
-                                  style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(vertical: 14),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    flex: 3,
+                    child: _ActionButton(
+                      icon: Icons.chat_bubble_outline,
+                      label: 'Message',
+                      onTap: () {},
                     ),
                   ),
-                  Positioned(
-                    top: 110,
-                    child: Center(
-                      child: Container(
-                        width: 140,
-                        height: 140,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 6,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromRGBO(0, 0, 0, 0.15),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        child: const CircleAvatar(
-                          radius: 68,
-                          backgroundImage: NetworkImage(
-                            'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400',
-                          ),
+                  const SizedBox(width: 10),
+                  _ActionButton(
+                    icon: Icons.phone_outlined,
+                    label: '',
+                    onTap: () {},
+                    iconOnly: true,
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 14),
+
+            // ── Stats Card ───────────────────────────────────
+            _Card(
+              child: Row(
+                children: [
+                  _StatItem(value: '16', label: 'Projects'),
+                  _Divider(),
+                  _StatItem(value: '965', label: 'Followers'),
+                  _Divider(),
+                  _StatItem(value: '2+ Years', label: 'Experience'),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            // ── About Me ─────────────────────────────────────
+            _Card(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: const [
+                      Icon(Icons.face_outlined,
+                          color: Color(0xFFE08C2A), size: 22),
+                      SizedBox(width: 8),
+                      Text(
+                        'About Me',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF1A2340),
                         ),
                       ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'Passionate UI/UX Designer focused on crafting beautiful, '
+                        'user-centered digital experiences. Skilled in Figma and '
+                        'design systems, with a love for clean interfaces, '
+                        'meaningful interactions, and pixel-perfect details.',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF555F70),
+                      height: 1.55,
                     ),
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _actionButton(Icons.message, 'Message'),
-                    _actionButton(Icons.call, 'Call'),
-                    _actionButton(Icons.share, 'Share'),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+            ),
 
-  Widget _detailItem(String title, String value) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+            const SizedBox(height: 12),
 
-  Widget _statCard(String label, String value) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FF),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        children: [
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.grey[700],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _actionButton(IconData icon, String label) {
-    return Expanded(
-      child: Container(
-        height: 58,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          boxShadow: [
-            BoxShadow(
-              color: const Color.fromRGBO(0, 0, 0, 0.04),
-              blurRadius: 14,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: Colors.indigo, size: 20),
-              const SizedBox(width: 8),
-              Flexible(
-                child: Text(
-                  label,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
+            // ── Personal Details ─────────────────────────────
+            _Card(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: const [
+                          Icon(Icons.badge_outlined,
+                              color: Color(0xFFE08C2A), size: 22),
+                          SizedBox(width: 8),
+                          Text(
+                            'Personal Details',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF1A2340),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Icon(Icons.edit_outlined,
+                          size: 18, color: Color(0xFF9AA3B0)),
+                    ],
                   ),
-                ),
+                  const SizedBox(height: 16),
+                  _DetailRow(
+                    icon: Icons.email_outlined,
+                    label: 'Email',
+                    value: 'muradd4200@gmail.com',
+                  ),
+                  const Divider(height: 1, color: Color(0xFFF0F0F0)),
+                  _DetailRow(
+                    icon: Icons.fingerprint,
+                    label: 'Student ID',
+                    value: '232-134-009',
+                  ),
+                  const Divider(height: 1, color: Color(0xFFF0F0F0)),
+                  _DetailRow(
+                    icon: Icons.school_outlined,
+                    label: 'Department',
+                    value: 'Software Engineering',
+                  ),
+                  const Divider(height: 1, color: Color(0xFFF0F0F0)),
+                  _DetailRow(
+                    icon: Icons.layers_outlined,
+                    label: 'Batch',
+                    value: '5th',
+                  ),
+                  const Divider(height: 1, color: Color(0xFFF0F0F0)),
+                  _DetailRow(
+                    icon: Icons.location_on_outlined,
+                    label: 'Current City',
+                    value: 'Sylhet, Bangladesh',
+                  ),
+                  const Divider(height: 1, color: Color(0xFFF0F0F0)),
+                  _DetailRow(
+                    icon: Icons.account_balance_outlined,
+                    label: 'Institution',
+                    value: 'Metropolitan University Bangladesh',
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+            ),
 
-  Widget _sectionDivider() {
-    return Container(
-      height: 1,
-      color: Colors.grey[300],
-    );
-  }
-
-  Widget _skillChip(String skill) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE8EEFB),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: const Color(0xFFD0D9F0),
-        ),
-      ),
-      child: Text(
-        skill,
-        style: const TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-          color: Color(0xFF3F51B5),
+            const SizedBox(height: 30),
+          ],
         ),
       ),
     );
   }
 }
 
+// ── Reusable Widgets ──────────────────────────────────────────────────────────
+
+class _Card extends StatelessWidget {
+  final Widget child;
+  const _Card({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: child,
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final bool iconOnly;
+
+  const _ActionButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.iconOnly = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          vertical: 13,
+          horizontal: iconOnly ? 18 : 0,
+        ),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF0F1F5),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 18, color: const Color(0xFF1A2340)),
+            if (!iconOnly) ...[
+              const SizedBox(width: 7),
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF1A2340),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StatItem extends StatelessWidget {
+  final String value;
+  final String label;
+  const _StatItem({required this.value, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF1A2340),
+            ),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 12,
+              color: Color(0xFF9AA3B0),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Divider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 36,
+      width: 1,
+      color: const Color(0xFFE8E8E8),
+    );
+  }
+}
+
+class _DetailRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const _DetailRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 11),
+      child: Row(
+        children: [
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: const Color(0xFFF5F5F7),
+              borderRadius: BorderRadius.circular(9),
+            ),
+            child: Icon(icon, size: 18, color: const Color(0xFFE08C2A)),
+          ),
+          const SizedBox(width: 14),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: Color(0xFFE08C2A),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF1A2340),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
