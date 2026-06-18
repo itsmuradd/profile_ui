@@ -141,12 +141,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               decoration: BoxDecoration(
                                 color: _isFollowing
-                                    ? AppColors.primaryBlue.withOpacity(0.75)
+                                    ? AppColors.primaryBlue.withValues(alpha :0.75)
                                     : AppColors.primaryBlue,
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.primaryBlue.withOpacity(0.30),
+                                    color: AppColors.primaryBlue.withValues(alpha : 0.30),
                                     blurRadius: 10,
                                     offset: const Offset(0, 4),
                                   ),
@@ -334,7 +334,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primaryBlue.withOpacity(0.30),
+                          color: AppColors.primaryBlue.withValues(alpha : 0.30),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
@@ -411,7 +411,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha : 0.05),
               blurRadius: 12,
               offset: const Offset(0, 3),
             ),
@@ -447,7 +447,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha:0.05),
               blurRadius: 12,
               offset: const Offset(0, 3),
             ),
