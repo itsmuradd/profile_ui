@@ -4,6 +4,9 @@ void main() {
   runApp(const MyApp());
 }
 
+// ─────────────────────────────────────────────
+//  App Root
+// ─────────────────────────────────────────────
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -13,7 +16,9 @@ class MyApp extends StatelessWidget {
       title: 'Profile',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFE08C2A)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF4AB8E8),
+        ),
         useMaterial3: true,
         fontFamily: 'Roboto',
       ),
@@ -22,362 +27,539 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class ProfileScreen extends StatelessWidget {
+// ─────────────────────────────────────────────
+//  Profile Screen  (StatefulWidget for setState)
+// ─────────────────────────────────────────────
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  // ── State variables ────────────────────────
+  bool _isFollowing = false;
+  String _statusText = 'Available for work';
+  int _followerCount = 1200;
+  int _projectCount = 12;
+
+  // ── Color palette ─────────────────────────
+  static const Color _bgColor = Color(0xFFF2F5FA);
+  static const Color _cardColor = Colors.white;
+  static const Color _accentBlue = Color(0xFF4AB8E8);
+  static const Color _darkText = Color(0xFF1A1F2E);
+  static const Color _mutedText = Color(0xFF8A94A6);
+  static const Color _detailBg = Color(0xFFEEF2F8);
+  static const Color _navActive = Color(0xFF4AB8E8);
+
+  // ── Follow toggle ──────────────────────────
+  void _toggleFollow() {
+    setState(() {
+      _isFollowing = !_isFollowing;
+      _followerCount = _isFollowing ? 1201 : 1200;
+    });
+  }
+
+  // ── Update Status (setState demo) ─────────
+  void _updateStatus() {
+    final statuses = [
+      'Available for work',
+      'Open to collaborations',
+      'Currently busy 🔴',
+      'Designing something new ✨',
+    ];
+    setState(() {
+      final current = statuses.indexOf(_statusText);
+      _statusText = statuses[(current + 1) % statuses.length];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F7),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // ── Top App Bar ──────────────────────────────────
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.only(
-                  top: 48, left: 20, right: 20, bottom: 14),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    'Profile',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF1A2340),
-                    ),
-                  ),
-                  Icon(Icons.dark_mode_outlined,
-                      color: Color(0xFFE08C2A), size: 26),
-                ],
-              ),
-            ),
+      backgroundColor: _bgColor,
 
-            // ── Banner + Avatar + Name ───────────────────────
-            Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.topCenter,
-              children: [
-                // Banner image
-                Container(
-                  height: 170,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(
-                        'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
-                      ),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-
-                // White background behind name block so it flows cleanly
-                Positioned(
-                  top: 120,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    color: Colors.white,
-                    height: 130,
-                  ),
-                ),
-
-                // Avatar centred, half on banner / half on white
-                Positioned(
-                  top: 80,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 4),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.15),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: const CircleAvatar(
-                      radius: 52,
-                      backgroundColor: Color(0xFFE0E0E0),
-                      child: Icon(Icons.person,
-                          size: 56, color: Color(0xFFBDBDBD)),
-                    ),
-                  ),
-                ),
-
-                // Name + title below avatar
-                Positioned(
-                  top: 194,
-                  left: 0,
-                  right: 0,
-                  child: Column(
-                    children: const [
-                      Text(
-                        'Murad Hussain',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF1A2340),
-                        ),
-                      ),
-                      SizedBox(height: 2),
-                      Text(
-                        'Software Engineering Student',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFFE08C2A),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-
-            // Spacer so content starts below the overlap zone
-            const SizedBox(height: 68),
-
-            // ── Action Buttons ───────────────────────────────
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: _ActionButton(
-                      icon: Icons.check,
-                      label: 'Following',
-                      onTap: () {},
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    flex: 3,
-                    child: _ActionButton(
-                      icon: Icons.chat_bubble_outline,
-                      label: 'Message',
-                      onTap: () {},
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  _ActionButton(
-                    icon: Icons.phone_outlined,
-                    label: '',
-                    onTap: () {},
-                    iconOnly: true,
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 14),
-
-            // ── Stats Card ───────────────────────────────────
-            _Card(
-              child: Row(
-                children: [
-                  _StatItem(value: '16', label: 'Projects'),
-                  _Divider(),
-                  _StatItem(value: '965', label: 'Followers'),
-                  _Divider(),
-                  _StatItem(value: '2+ Years', label: 'Experience'),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            // ── About Me ─────────────────────────────────────
-            _Card(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: const [
-                      Icon(Icons.face_outlined,
-                          color: Color(0xFFE08C2A), size: 22),
-                      SizedBox(width: 8),
-                      Text(
-                        'About Me',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF1A2340),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    'Passionate UI/UX Designer focused on crafting beautiful, '
-                        'user-centered digital experiences. Skilled in Figma and '
-                        'design systems, with a love for clean interfaces, '
-                        'meaningful interactions, and pixel-perfect details.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Color(0xFF555F70),
-                      height: 1.55,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            // ── Personal Details ─────────────────────────────
-            _Card(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: const [
-                          Icon(Icons.badge_outlined,
-                              color: Color(0xFFE08C2A), size: 22),
-                          SizedBox(width: 8),
-                          Text(
-                            'Personal Details',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF1A2340),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Icon(Icons.edit_outlined,
-                          size: 18, color: Color(0xFF9AA3B0)),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  _DetailRow(
-                    icon: Icons.email_outlined,
-                    label: 'Email',
-                    value: 'muradd4200@gmail.com',
-                  ),
-                  const Divider(height: 1, color: Color(0xFFF0F0F0)),
-                  _DetailRow(
-                    icon: Icons.fingerprint,
-                    label: 'Student ID',
-                    value: '232-134-009',
-                  ),
-                  const Divider(height: 1, color: Color(0xFFF0F0F0)),
-                  _DetailRow(
-                    icon: Icons.school_outlined,
-                    label: 'Department',
-                    value: 'Software Engineering',
-                  ),
-                  const Divider(height: 1, color: Color(0xFFF0F0F0)),
-                  _DetailRow(
-                    icon: Icons.layers_outlined,
-                    label: 'Batch',
-                    value: '5th',
-                  ),
-                  const Divider(height: 1, color: Color(0xFFF0F0F0)),
-                  _DetailRow(
-                    icon: Icons.location_on_outlined,
-                    label: 'Current City',
-                    value: 'Sylhet, Bangladesh',
-                  ),
-                  const Divider(height: 1, color: Color(0xFFF0F0F0)),
-                  _DetailRow(
-                    icon: Icons.account_balance_outlined,
-                    label: 'Institution',
-                    value: 'Metropolitan University Bangladesh',
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 30),
-          ],
+      // ── AppBar ───────────────────────────────
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new,
+              size: 18, color: _darkText),
+          onPressed: () {},
         ),
-      ),
-    );
-  }
-}
-
-// ── Reusable Widgets ──────────────────────────────────────────────────────────
-
-class _Card extends StatelessWidget {
-  final Widget child;
-  const _Card({required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+        title: const Text(
+          'Profile',
+          style: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w700,
+            color: _accentBlue,
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_outlined,
+                size: 22, color: _darkText),
+            onPressed: () {},
           ),
         ],
       ),
-      child: child,
+
+      // ── Body ─────────────────────────────────
+      body: Column(
+        children: [
+          // Scrollable main content
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  // ── Banner + Avatar Stack ──────
+                  _buildBannerSection(),
+
+                  // ── Name & Profession ──────────
+                  const SizedBox(height: 14),
+                  const Text(
+                    'Murad Hussain',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w800,
+                      color: _darkText,
+                      letterSpacing: -0.3,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'UI/UX Designer',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: _accentBlue,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+
+                  // ── Status badge (setState result) ──
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: _accentBlue.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      _statusText,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: _accentBlue,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // ── Action Buttons ─────────────
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      children: [
+                        // Follow button
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: _toggleFollow,
+                            child: Container(
+                              padding:
+                              const EdgeInsets.symmetric(vertical: 14),
+                              decoration: BoxDecoration(
+                                gradient: _isFollowing
+                                    ? const LinearGradient(colors: [
+                                  Color(0xFF8ACCE8),
+                                  Color(0xFF4AB8E8)
+                                ])
+                                    : const LinearGradient(colors: [
+                                  Color(0xFF4AB8E8),
+                                  Color(0xFF2196F3)
+                                ]),
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color:
+                                    _accentBlue.withOpacity(0.35),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  _isFollowing ? 'Following ✓' : 'Follow',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        // Message button
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              padding:
+                              const EdgeInsets.symmetric(vertical: 14),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                    color: const Color(0xFFD0D8E8),
+                                    width: 1.5),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  'Message',
+                                  style: TextStyle(
+                                    color: _darkText,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // ── Stats Row ──────────────────
+                  _buildStatsCard(),
+
+                  const SizedBox(height: 14),
+
+                  // ── About Me ───────────────────
+                  _buildAboutMe(),
+
+                  const SizedBox(height: 14),
+
+                  // ── Details Section ────────────
+                  _buildDetailsSection(),
+
+                  const SizedBox(height: 14),
+
+                  // ── Update Status Button ────────
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: GestureDetector(
+                      onTap: _updateStatus,
+                      child: Container(
+                        width: double.infinity,
+                        padding:
+                        const EdgeInsets.symmetric(vertical: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: const Color(0xFFD0D8E8),
+                            width: 1.5,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.edit_note_outlined,
+                                size: 20, color: _darkText),
+                            SizedBox(width: 8),
+                            Text(
+                              'Update Status',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: _darkText,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ),
+
+          // ── Bottom Navigation Bar ────────────
+          _buildBottomNav(),
+        ],
+      ),
     );
   }
-}
 
-class _ActionButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  final bool iconOnly;
-
-  const _ActionButton({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-    this.iconOnly = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          vertical: 13,
-          horizontal: iconOnly ? 18 : 0,
+  // ── Banner + Avatar ────────────────────────────────────────────────────────
+  Widget _buildBannerSection() {
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.bottomCenter,
+      children: [
+        // Banner
+        Container(
+          height: 160,
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(
+                'https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=800',
+              ),
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF0F1F5),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 18, color: const Color(0xFF1A2340)),
-            if (!iconOnly) ...[
-              const SizedBox(width: 7),
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF1A2340),
+
+        // Avatar (centred, overlapping banner bottom)
+        Positioned(
+          bottom: -45,
+          child: Stack(
+            children: [
+              // Outer glow ring
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF4AB8E8), Color(0xFF2196F3)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _accentBlue.withOpacity(0.4),
+                      blurRadius: 14,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+              ),
+              // White inner ring
+              Positioned(
+                top: 3,
+                left: 3,
+                child: Container(
+                  width: 94,
+                  height: 94,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              // Avatar image / placeholder
+              Positioned(
+                top: 5,
+                left: 5,
+                child: CircleAvatar(
+                  radius: 45,
+                  backgroundColor: const Color(0xFFD0E8F5),
+                  child: const Icon(
+                    Icons.person,
+                    size: 50,
+                    color: Color(0xFF7BB8D4),
+                  ),
                 ),
               ),
             ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ── Stats Card ─────────────────────────────────────────────────────────────
+  Widget _buildStatsCard() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 18),
+        decoration: BoxDecoration(
+          color: _cardColor,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            _StatItem(
+              value: '$_projectCount',
+              label: 'PROJECTS',
+            ),
+            _VerticalDivider(),
+            _StatItem(
+              value: _followerCount >= 1000
+                  ? '${(_followerCount / 1000).toStringAsFixed(1)}k'
+                  : '$_followerCount',
+              label: 'FOLLOWERS',
+            ),
+            _VerticalDivider(),
+            const _StatItem(value: '2y', label: 'EXPERIENCE'),
           ],
         ),
       ),
     );
   }
+
+  // ── About Me ───────────────────────────────────────────────────────────────
+  Widget _buildAboutMe() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: _cardColor,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'About Me',
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+                color: _darkText,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: _bgColor,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                    color: const Color(0xFFDDE4F0), width: 1),
+              ),
+              child: const Text(
+                'Passionate UI/UX designer dedicated to building seamless, '
+                    'high-performance applications. I specialize in creating '
+                    'intuitive user interfaces and robust user experiences. '
+                    "When I'm not designing, I'm exploring the latest design "
+                    'trends and mentoring the next generation of designers.',
+                style: TextStyle(
+                  fontSize: 13.5,
+                  color: Color(0xFF4A5568),
+                  height: 1.6,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Details Section ────────────────────────────────────────────────────────
+  Widget _buildDetailsSection() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(left: 4, bottom: 12),
+            child: Text(
+              'Details',
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+                color: _darkText,
+              ),
+            ),
+          ),
+          _DetailTile(
+            icon: Icons.school_outlined,
+            label: 'Department',
+            value: 'Software Engineering',
+          ),
+          const SizedBox(height: 10),
+          _DetailTile(
+            icon: Icons.badge_outlined,
+            label: 'Student ID',
+            value: '232-134-009',
+          ),
+          const SizedBox(height: 10),
+          _DetailTile(
+            icon: Icons.calendar_today_outlined,
+            label: 'Batch',
+            value: '5th Batch',
+          ),
+          const SizedBox(height: 10),
+          _DetailTile(
+            icon: Icons.email_outlined,
+            label: 'Email Address',
+            value: 'muradd4200@gmail.com',
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Bottom Navigation Bar ──────────────────────────────────────────────────
+  Widget _buildBottomNav() {
+    return Container(
+      height: 70,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x14000000),
+            blurRadius: 12,
+            offset: Offset(0, -3),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _NavItem(icon: Icons.home_outlined, label: 'Home', active: false),
+          _NavItem(
+              icon: Icons.search_outlined, label: 'Search', active: false),
+          _NavItem(
+              icon: Icons.favorite_border_outlined,
+              label: 'Activity',
+              active: false),
+          _NavItem(icon: Icons.person, label: 'Profile', active: true),
+        ],
+      ),
+    );
+  }
 }
+
+// ─────────────────────────────────────────────
+//  Helper Widgets
+// ─────────────────────────────────────────────
 
 class _StatItem extends StatelessWidget {
   final String value;
@@ -387,47 +569,50 @@ class _StatItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Column(
-        children: [
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF1A2340),
+      child: Center(
+        child: Column(
+          children: [
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                color: Color(0xFF1A1F2E),
+              ),
             ),
-          ),
-          const SizedBox(height: 3),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Color(0xFF9AA3B0),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF8A94A6),
+                letterSpacing: 0.8,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-class _Divider extends StatelessWidget {
+class _VerticalDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 36,
+      height: 40,
       width: 1,
-      color: const Color(0xFFE8E8E8),
+      color: const Color(0xFFE4EAF4),
     );
   }
 }
 
-class _DetailRow extends StatelessWidget {
+class _DetailTile extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
-
-  const _DetailRow({
+  const _DetailTile({
     required this.icon,
     required this.label,
     required this.value,
@@ -435,44 +620,107 @@ class _DetailRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 11),
-      child: Row(
-        children: [
-          Container(
-            width: 38,
-            height: 38,
-            decoration: BoxDecoration(
-              color: const Color(0xFFF5F5F7),
-              borderRadius: BorderRadius.circular(9),
-            ),
-            child: Icon(icon, size: 18, color: const Color(0xFFE08C2A)),
-          ),
-          const SizedBox(width: 14),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 11,
-                  color: Color(0xFFE08C2A),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF1A2340),
-                ),
-              ),
-            ],
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
+      child: Row(
+        children: [
+          // Icon box
+          Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: const Color(0xFFEEF2F8),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Center(
+              child: Icon(icon, size: 20, color: const Color(0xFF4A6FA5)),
+            ),
+          ),
+          const SizedBox(width: 14),
+          // Label + value
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Color(0xFF8A94A6),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF1A1F2E),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Arrow
+          const Icon(Icons.chevron_right,
+              size: 20, color: Color(0xFFB0BAC9)),
+        ],
+      ),
+    );
+  }
+}
+
+class _NavItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool active;
+  const _NavItem(
+      {required this.icon, required this.label, required this.active});
+
+  @override
+  Widget build(BuildContext context) {
+    final color = active ? const Color(0xFF4AB8E8) : const Color(0xFF8A94A6);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: active ? 48 : null,
+          height: active ? 36 : null,
+          decoration: active
+              ? BoxDecoration(
+            color: const Color(0xFF4AB8E8),
+            borderRadius: BorderRadius.circular(20),
+          )
+              : null,
+          padding: active
+              ? const EdgeInsets.symmetric(horizontal: 14)
+              : EdgeInsets.zero,
+          child: Icon(icon, color: active ? Colors.white : color, size: 22),
+        ),
+        if (!active) ...[
+          const SizedBox(height: 3),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              color: color,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ],
     );
   }
 }
