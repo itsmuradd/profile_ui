@@ -291,7 +291,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(
-                   'assets/images/cover.jpg',
+                    'assets/images/cover.jpg',
                   ),
                   fit: BoxFit.cover,
                 ),
@@ -506,6 +506,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           _DetailTile(
+            icon: Icons.account_balance_outlined,
+            label: 'Institution',
+            value: 'Metropolitan University,Sylhet',
+          ),
+          const SizedBox(height: 10),
+          _DetailTile(
             icon: Icons.school_outlined,
             label: 'Department',
             value: 'Software Engineering',
@@ -520,7 +526,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _DetailTile(
             icon: Icons.calendar_today_outlined,
             label: 'Batch',
-            value: '5th Batch',
+            value: '5th',
           ),
           const SizedBox(height: 10),
           _DetailTile(
