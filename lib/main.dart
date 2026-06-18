@@ -29,16 +29,20 @@ class MyApp extends StatelessWidget {
 //  Colour Tokens
 // ─────────────────────────────────────────────────────────────────────────────
 class AppColors {
-  static const primaryBlue   = Color(0xFF02569B);
-  static const gradientStart = Color(0xFF4AB8E8);
-  static const surfaceLight  = Color(0xFFF8F9FF);
-  static const surfaceCard   = Color(0xFFFFFFFF);
-  static const lightBlueSurf = Color(0xFFEFF4FF);
-  static const iconBg        = Color(0xFFD0E4FF);
-  static const deepNavy      = Color(0xFF1A2340);
-  static const bluegrey      = Color(0xFF5A6A85);
-  static const mutedLabel    = Color(0xFF8A96AA);
-  static const divider       = Color(0xFFE4EBF8);
+  // Primary
+  static const primaryBlue    = Color(0xFF02569B);
+  // Surfaces
+  static const surfaceLight   = Color(0xFFF8F9FF);
+  static const surfaceCard    = Color(0xFFFFFFFF);
+  // Secondary accents
+  static const lightBlueSurf  = Color(0xFFEFF4FF);
+  static const iconBg         = Color(0xFFD0E4FF);
+  // Text
+  static const deepNavy       = Color(0xFF1A2340);
+  static const blueGrey       = Color(0xFF5A6A85);
+  static const mutedLabel     = Color(0xFF8A96AA);
+  // Dividers
+  static const divider        = Color(0xFFE4EBF8);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -52,9 +56,9 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  bool _isFollowing   = false;
-  int  _followerCount = 1200;
-  int  _projectCount  = 12;
+  bool _isFollowing    = false;
+  int  _followerCount  = 1200;
+  int  _projectCount   = 12;
 
   // setState #1 — Follow toggle
   void _toggleFollow() {
@@ -64,7 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  // setState #2 — Update Status (cycles project count as demo)
+  // setState #2 — Update Status button (cycles project count as demo)
   void _updateStatus() {
     setState(() {
       _projectCount = _projectCount < 20 ? _projectCount + 1 : 12;
@@ -89,7 +93,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           onPressed: () {},
         ),
-        // FIX: title is "Profile" — not the user's name
         title: const Text(
           'Profile',
           style: TextStyle(
@@ -100,16 +103,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         centerTitle: true,
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 4),
-            child: IconButton(
-              icon: const Icon(
-                Icons.settings_outlined,
-                size: 22,
-                color: AppColors.deepNavy,
-              ),
-              onPressed: () {},
+          IconButton(
+            icon: const Icon(
+              Icons.settings_outlined,
+              size: 22,
+              color: AppColors.deepNavy,
             ),
+            onPressed: () {},
           ),
         ],
       ),
@@ -123,43 +123,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // 1. Hero block: banner → avatar ring → name/role
+                  // ── 1. Banner → Avatar → Name block ─────────────────────
                   _buildHeroBlock(),
 
                   const SizedBox(height: 22),
 
-                  // 2. Follow / Message buttons
+                  // ── 2. Action Buttons ────────────────────────────────────
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
                       children: [
-                        // Follow — gradient
+                        // Follow (primary)
                         Expanded(
                           child: GestureDetector(
                             onTap: _toggleFollow,
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: _isFollowing
-                                      ? [
-                                    AppColors.gradientStart
-                                        .withValues(alpha: 0.75),
-                                    AppColors.primaryBlue
-                                        .withValues(alpha: 0.75),
-                                  ]
-                                      : [
-                                    AppColors.gradientStart,
-                                    AppColors.primaryBlue,
-                                  ],
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                ),
+                                color: _isFollowing
+                                    ? AppColors.primaryBlue.withValues(alpha : 0.75)
+                                    : AppColors.primaryBlue,
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.primaryBlue
-                                        .withValues(alpha: 0.30),
+                                    color: AppColors.primaryBlue.withValues(alpha : 0.30),
                                     blurRadius: 10,
                                     offset: const Offset(0, 4),
                                   ),
@@ -178,10 +165,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                         ),
-
                         const SizedBox(width: 12),
-
-                        // Message — outline
+                        // Message (ghost/outline)
                         Expanded(
                           child: GestureDetector(
                             onTap: () {},
@@ -214,22 +199,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   const SizedBox(height: 20),
 
-                  // 3. Stats card
+                  // ── 3. Statistics card ───────────────────────────────────
                   _buildStatsCard(),
 
                   const SizedBox(height: 16),
 
-                  // 4. About Me
+                  // ── 4. About Me card ─────────────────────────────────────
                   _buildAboutMe(),
 
                   const SizedBox(height: 16),
 
-                  // 5. Details
+                  // ── 5. Details section ───────────────────────────────────
                   _buildDetailsSection(),
 
                   const SizedBox(height: 16),
 
-                  // 6. Update Status
+                  // ── 6. Update Status button (setState) ───────────────────
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: GestureDetector(
@@ -248,20 +233,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                          Icon(
-                          Icons.edit_note_outlined,
-                          size: 20,
-                          color: AppColors.deepNavy,
-                        ),
-                        SizedBox(width: 😎,
-                          Text(
-                            'Update Status',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
+                            Icon(
+                              Icons.edit_note_outlined,
+                              size: 20,
                               color: AppColors.deepNavy,
                             ),
-                          ),
+                            SizedBox(width: 8),
+                            Text(
+                              'Update Status',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.deepNavy,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -281,26 +266,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // ── Hero block ────────────────────────────────────────────────────────────
+  // ── Hero block: banner → white sheet → centred avatar → name ─────────────
   Widget _buildHeroBlock() {
-    const double bannerHeight   = 160.0;
-    const double avatarRadius   = 48.0;
+    const double bannerHeight  = 300.0;
+    const double avatarRadius  = 48.0;
     const double avatarDiameter = avatarRadius * 2;
+    // How far the white area overlaps the banner so the avatar
+    // sits half-on-banner, half-on-white
+    const double whiteTopOffset = bannerHeight - avatarRadius;
 
     return SizedBox(
-      height: bannerHeight + avatarRadius + 10 + 28 + 22,
+      // total height: banner overlap zone + avatar + gap + name + subtitle
+      height: bannerHeight + avatarRadius + 8 + 28 + 22,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          // Banner
+          // ── Banner image ────────────────────────────────────
           Positioned(
-            top: 0, left: 0, right: 0,
+            top: 0,
+            left: 0,
+            right: 0,
             height: bannerHeight,
             child: Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(
-                    'https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=900',
+                  image: AssetImage(
+                   'assets/images/cover.jpg',
                   ),
                   fit: BoxFit.cover,
                 ),
@@ -308,72 +299,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
 
-          // White base below banner
+          // ── White rounded card below banner ─────────────────
           Positioned(
-            top: bannerHeight - avatarRadius,
-            left: 0, right: 0, bottom: 0,
-            child: Container(color: AppColors.surfaceLight),
+            top: whiteTopOffset,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Container(
+              decoration: const BoxDecoration(
+                color: AppColors.surfaceLight,
+              ),
+            ),
           ),
 
-          // Avatar ring — centred
+          // ── Avatar ring (centred) ────────────────────────────
           Positioned(
-            top: bannerHeight - avatarRadius,
-            left: 0, right: 0,
+            top: bannerHeight - avatarRadius - 40,   // sits on the seam
+            left: 0,
+            right: 0,
             child: Center(
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  // Gradient glow ring
+                  // Outer blue glow ring
                   Container(
-                    width: avatarDiameter + 8,
+                    width:  avatarDiameter + 8,
                     height: avatarDiameter + 8,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: const LinearGradient(
-                        colors: [
-                          AppColors.gradientStart,
-                          AppColors.primaryBlue,
-                        ],
+                        colors: [Color(0xFF4AB8E8), AppColors.primaryBlue],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primaryBlue.withValues(alpha: 0.30),
+                          color: AppColors.primaryBlue.withValues(alpha :0.30),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
                       ],
                     ),
                   ),
-                  // White separator
+                  // White separator ring
                   Container(
-                    width: avatarDiameter + 4,
+                    width:  avatarDiameter + 4,
                     height: avatarDiameter + 4,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
                     ),
                   ),
-                  // Avatar photo
+                  // Avatar
                   CircleAvatar(
                     radius: avatarRadius,
-                    backgroundImage: const NetworkImage(
-                      'https://images.unsplash.com/photo-1603415526960-f7e0328c63b1?w=200',
-                    ),
-                    backgroundColor: AppColors.iconBg,
+                    backgroundImage: AssetImage('assets/images/profile.jpg'),
                   ),
                 ],
               ),
             ),
           ),
 
-          // Name + designation — below avatar
+          // ── Name + designation (below avatar) ────────────────
           Positioned(
-            top: bannerHeight + avatarRadius + 10,
-            left: 0, right: 0,
-            child: const Column(
-              children: [
+            top: bannerHeight + avatarRadius - 15,
+            left: 0,
+            right: 0,
+            child: Column(
+              children: const [
                 Text(
                   'Murad Hussain',
                   textAlign: TextAlign.center,
@@ -402,7 +395,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // ── Stats card ────────────────────────────────────────────────────────────
+  // ── Statistics card ───────────────────────────────────────────────────────
   Widget _buildStatsCard() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -413,7 +406,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: Colors.black.withValues(alpha :0.05),
               blurRadius: 12,
               offset: const Offset(0, 3),
             ),
@@ -437,7 +430,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // ── About Me ──────────────────────────────────────────────────────────────
+  // ── About Me card ─────────────────────────────────────────────────────────
   Widget _buildAboutMe() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -449,7 +442,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: Colors.black.withValues(alpha :0.05),
               blurRadius: 12,
               offset: const Offset(0, 3),
             ),
@@ -483,7 +476,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     'trends and mentoring the next generation of designers.',
                 style: TextStyle(
                   fontSize: 13.5,
-                  color: AppColors.bluegrey,
+                  color: AppColors.blueGrey,
                   height: 1.65,
                 ),
               ),
@@ -544,23 +537,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildBottomNav() {
     return Container(
       height: 68,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.surfaceCard,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.07),
+            color: Color(0x12000000),
             blurRadius: 12,
-            offset: const Offset(0, -3),
+            offset: Offset(0, -3),
           ),
         ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _NavItem(icon: Icons.home_outlined,            label: 'Home',     active: false),
-          _NavItem(icon: Icons.search_outlined,           label: 'Search',   active: false),
-          _NavItem(icon: Icons.favorite_border_outlined,  label: 'Activity', active: false),
-          _NavItem(icon: Icons.person,                    label: 'Profile',  active: true),
+          _NavItem(icon: Icons.home_outlined,         label: 'Home',     active: false),
+          _NavItem(icon: Icons.search_outlined,        label: 'Search',   active: false),
+          _NavItem(icon: Icons.favorite_border_outlined, label: 'Activity', active: false),
+          _NavItem(icon: Icons.person,                 label: 'Profile',  active: true),
         ],
       ),
     );
@@ -634,7 +627,7 @@ class _DetailTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
       decoration: BoxDecoration(
-        color: AppColors.lightBlueSurf,
+        color: AppColors.lightBlueSurf,           // #eff4ff per spec
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.divider, width: 1),
       ),
@@ -645,7 +638,7 @@ class _DetailTile extends StatelessWidget {
             width: 42,
             height: 42,
             decoration: BoxDecoration(
-              color: AppColors.iconBg,
+              color: AppColors.iconBg,             // #d0e4ff per spec
               borderRadius: BorderRadius.circular(10),
             ),
             child: Center(
@@ -697,37 +690,31 @@ class _NavItem extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Active tab: gradient pill; inactive: plain icon
-        active
-            ? Container(
-          width: 50,
-          height: 34,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [AppColors.gradientStart, AppColors.primaryBlue],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
+        Container(
+          width:   active ? 50 : null,
+          height:  active ? 34 : null,
+          padding: active
+              ? const EdgeInsets.symmetric(horizontal: 12)
+              : EdgeInsets.zero,
+          decoration: active
+              ? BoxDecoration(
+            color: AppColors.primaryBlue,
             borderRadius: BorderRadius.circular(20),
-          ),
-          child: const Icon(Icons.person, color: Colors.white, size: 22),
-        )
-            : Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: color, size: 22),
-            const SizedBox(height: 3),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 10,
-                color: color,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
+          )
+              : null,
+          child: Icon(icon, color: active ? Colors.white : color, size: 22),
         ),
+        if (!active) ...[
+          const SizedBox(height: 3),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              color: color,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
       ],
     );
   }
